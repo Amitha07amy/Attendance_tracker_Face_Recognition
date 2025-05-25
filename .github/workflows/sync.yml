@@ -11,17 +11,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Check out your repository
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          lfs: true                # enable Git LFS on checkout
 
-      # Optional: Remove files you don't want on HF (keep README.md)
+      # 2. Install Git LFS (for Hugging Face image support)
+      - name: Install Git LFS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-lfs
+          git lfs install
+
+      # 3. (Re)track image file types
+      - name: Track binary image files with Git LFS
+        run: |
+          git lfs track "*.png" "*.jpg" "*.jpeg" "*.avif"
+          git add .gitattributes
+          git commit -m "Configure Git LFS for images" || echo "No changes to commit"
+
+      # 4. Optional: Remove files you don't want on HF (keep README.md)
       - name: Remove unnecessary files
         run: rm -rf .git .github .gitignore
 
+      # 5. Sync to Hugging Face Spaces
       - name: Sync to Hugging Face Spaces
         uses: JacobLinCool/huggingface-sync@v1
         with:
           github: ${{ secrets.GITHUB_TOKEN }}
-          user: Amy07amitha           # your Hugging Face username
-          space: Attendance_Tracker   # your Hugging Face Space name
+          user: Amy07amitha           # use your Hugging Face username
+          space: Attendance_Tracker   # use your Hugging Face Space name
           token: ${{ secrets.HF_TOKEN }}
