@@ -14,14 +14,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Optional: Remove files you don't want on HF
+      # Optional: Remove files you don't want on HF (keep README.md)
       - name: Remove unnecessary files
-        run: rm -rf .git .github .gitignore README.md
+        run: rm -rf .git .github .gitignore
 
       - name: Sync to Hugging Face Spaces
         uses: JacobLinCool/huggingface-sync@v1
         with:
           github: ${{ secrets.GITHUB_TOKEN }}
-          user: Amy07amitha            # 👈 your Hugging Face username
-          space: Attendance_Tracker    # 👈 your Hugging Face Space name
-          token: ${{ secrets.HF_TOKEN }}  # Defined in next step
+          user: Amy07amitha           # your Hugging Face username
+          space: Attendance_Tracker   # your Hugging Face Space name
+          token: ${{ secrets.HF_TOKEN }}
